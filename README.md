@@ -18,7 +18,7 @@ Requisitos Previos
 -Maven 3.6+
 -Opcional: SQL Server (para entorno de producción)
 
-📂 Estructura del Proyecto TRABAJOFINALWEB/
+# 📂 Estructura del Proyecto 
 TrabajoFinalWeb (Multi-Módulo Maven)
 ├── backend (Módulo principal)
 │   ├── src/main/java/edu/unimagdalena
