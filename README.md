@@ -12,6 +12,12 @@ Un sistema backend desarrollado con Spring Boot para gestionar reservas de vuelo
 - SQL Server - Base de datos de producción
 - Maven - Gestión de dependencias
 
+# 🚀 Configuración del Proyecto
+Requisitos Previos
+-JDK 21
+-Maven 3.6+
+-Opcional: SQL Server (para entorno de producción)
+
 📂 Estructura del Proyecto TRABAJOFINALWEB/
 TrabajoFinalWeb (Multi-Módulo Maven)
 ├── backend (Módulo principal)
