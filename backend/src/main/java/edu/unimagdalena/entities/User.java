@@ -14,11 +14,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String fullname;
+    
+    
     @Column(nullable = false)
     private String username;
+
     @Column(nullable = false)
     private String password;
-
+    
     public User updateWith(User user){
         return new User(this.id,
                         user.fullname,

@@ -55,6 +55,7 @@ public class UserController {
 
         userService.create(newUser);
     }
+
     //1. obtiene un usuario por el id
     @GetMapping("/{id}")
     public ResponseEntity<UserDto>findById(@PathVariable("id") Integer id){
@@ -63,6 +64,7 @@ public class UserController {
          .orElseThrow(UserNotFoundException::new);
      return ResponseEntity.status(HttpStatus.FOUND).body(user);
     }
+
     //2. listar todos los usuarios
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll(){
@@ -72,6 +74,7 @@ public class UserController {
                                              .collect(Collectors.toList());
             return ResponseEntity.ok().body(userDto);
     }
+
     //3. crear usuario
     @PostMapping
     public ResponseEntity<UserCreateDto>create(@RequestBody UserCreateDto User){
@@ -89,6 +92,7 @@ public class UserController {
                        .toUri();
             return ResponseEntity.created(location).body(userCreateDto);
     }
+
     //4. actualizar usuario id
     @PutMapping("/{id}")
     public ResponseEntity<UserCreateDto> update(@PathVariable("id") Integer id, @RequestBody UserCreateDto user) {
@@ -110,6 +114,7 @@ public class UserController {
         return ResponseEntity.created(location).body(createdDto);
     }
     }
+    
     //5. eliminar usuario id
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id){

@@ -12,7 +12,7 @@ public class BookingCreateDto {
     private Flight utboundFlight;
     private String paymentToken;
     private boolean checkedIn;
-    private User customer;
+    private User user;
     private String createdAt;
     private String bookingReference;
 }

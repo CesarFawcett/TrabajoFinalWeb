@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: .   # Usa el Dockerfile en la raíz del proyecto
+      dockerfile: Dockerfile
+    image: spring-backend
+    ports:
+      - "8080:8080"  # Spring Boot suele usar el puerto 8080 por defecto
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydb
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # Opciones: update, create-drop, none
+    depends_on:
+      - db
+    restart: unless-stopped  # Reinicia si falla (útil para producción)
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistencia de datos
+    ports:
+      - "5432:5432"  # Opcional: exponer PostgreSQL localmente (solo desarrollo)
+
+volumes:
+  postgres_data:

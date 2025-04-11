@@ -11,8 +11,7 @@ public class BookingMapper {
         bookingCreateDto.setId(booking.getId());
         bookingCreateDto.setStatus(booking.getStatus());
         bookingCreateDto.setCheckedIn(booking.isCheckedIn());
-        bookingCreateDto.setCustomer(booking.getCustomerName());
-        bookingCreateDto.setCreatedAt(booking.getCreatedAt());
+        bookingCreateDto.setUser(booking.getUser());
         bookingCreateDto.setBookingReference(booking.getBookingReference());
         return bookingCreateDto;
     }
@@ -21,7 +20,6 @@ public class BookingMapper {
         bookingDto.setId(booking.getId());
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setCheckedIn(booking.isCheckedIn());
-        bookingDto.setCreatedAt(booking.getCreatedAt());
         bookingDto.setBookingReference(booking.getBookingReference());
         return bookingDto;
     }
@@ -30,7 +28,6 @@ public class BookingMapper {
         booking.setId(bookingCreateDto.getId());
         booking.setStatus(bookingCreateDto.getStatus());
         booking.setCheckedIn(bookingCreateDto.isCheckedIn());
-        booking.setCreatedAt(bookingCreateDto.getCreatedAt());
         booking.setBookingReference(bookingCreateDto.getBookingReference());
         return booking;
     }
@@ -41,8 +38,7 @@ public class BookingMapper {
             bookingDto.setId(booking.getId());
             bookingDto.setStatus(booking.getStatus());
             bookingDto.setCheckedIn(booking.isCheckedIn());
-            bookingDto.setCustomer(booking.getCustomerName());
-            bookingDto.setCreatedAt(booking.getCreatedAt());
+            bookingDto.setUser(booking.getUser());
             bookingDto.setBookingReference(booking.getBookingReference());
             return bookingDto;
         } else {
@@ -54,8 +50,7 @@ public class BookingMapper {
         bookingDto.setId(booking.getId());
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setCheckedIn(booking.isCheckedIn());
-        bookingDto.setCustomer(booking.getCustomerName());
-        bookingDto.setCreatedAt(booking.getCreatedAt().toString());
+        bookingDto.setUser(booking.getUser());
         bookingDto.setBookingReference(booking.getBookingReference());
         return bookingDto;
     }
@@ -64,8 +59,7 @@ public class BookingMapper {
         booking.setId(bookingCreateDto.getId());
         booking.setStatus(bookingCreateDto.getStatus());
         booking.setCheckedIn(bookingCreateDto.isCheckedIn());
-        booking.setCustomerName(bookingCreateDto.getCustomer());
-        booking.setCreatedAt(bookingCreateDto.getCreatedAt());
+        booking.setUser(bookingCreateDto.getUser());
         booking.setBookingReference(bookingCreateDto.getBookingReference());
         return booking;
     }

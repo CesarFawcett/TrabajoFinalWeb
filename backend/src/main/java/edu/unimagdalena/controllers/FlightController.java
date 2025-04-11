@@ -1,12 +1,14 @@
 package edu.unimagdalena.controllers;
+
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import edu.unimagdalena.Dto.FlightCreateDto;
 import edu.unimagdalena.Dto.FlightDto;
 import edu.unimagdalena.Dto.FlightMapper;
@@ -30,6 +32,8 @@ public class FlightController {
 
     @PostConstruct
     public void initSampleFlights() {
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         // Vuelo 1
         Flight flight1 = new Flight();
         flight1.setDepartureDate("2022-04-29");
@@ -37,7 +41,7 @@ public class FlightController {
         flight1.setDepartureAirportName("Airport 1");
         flight1.setDepartureCity("City 1");
         flight1.setDepartureLocale("Locale 1");
-        flight1.setArrivalDate("2023-05-21");
+        flight1.setArrivalDate(LocalDateTime.parse("2022-04-29 11:30", dateFormatter));
         flight1.setArrivalAirportCode("ARG");
         flight1.setArrivalAirportName("Airport 2");
         flight1.setArrivalCity("City 2");
@@ -55,7 +59,7 @@ public class FlightController {
         flight2.setDepartureAirportName("Airport 3");
         flight2.setDepartureCity("City 2");
         flight2.setDepartureLocale("Locale 1");
-        flight2.setArrivalDate("2023-04-25");
+        flight2.setArrivalDate(LocalDateTime.parse("2022-04-29 11:30", dateFormatter));
         flight2.setArrivalAirportCode("SIR");
         flight2.setArrivalAirportName("Airport 4");
         flight2.setArrivalCity("City 2");
@@ -102,6 +106,23 @@ public class FlightController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(flightDtos);
     }
+    
+    @PostMapping
+    public ResponseEntity<FlightCreateDto>create(@RequestBody FlightCreateDto Flight){
+        Flight newFlight = flightMapper.toEntity(Flight);
+        Flight flightCreate = null;
+        try{
+            flightCreate = flightService.createFlight(newFlight);
+        }catch (Exception e){
+            throw new DuplicateCodigoException();
+        }
+        FlightCreateDto flightCreateDto = flightMapper.toFlightCreateDto(flightCreate);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                       .path("/{id}")
+                       .buildAndExpand(flightCreateDto.getId())
+                       .toUri();
+            return ResponseEntity.created(location).body(flightCreateDto);
+    }
 
     @PostMapping("/")
     public ResponseEntity<FlightCreateDto> createFlight(@RequestBody FlightCreateDto flightDto) {
@@ -145,10 +166,8 @@ public class FlightController {
     public ResponseEntity<List<FlightDto>> findFlightsByAirportAndDate(
             @PathVariable String departureAirportCode,
             @RequestParam String departureDate) {
-        
         List<Flight> flights = flightService.findByDepartureAirportCodeAndDepartureDate(
                 departureAirportCode, departureDate);
-        
         if (flights.isEmpty()) {
             throw new FlightNotFoundException();
         }
@@ -156,7 +175,6 @@ public class FlightController {
         List<FlightDto> flightDtos = flights.stream()
                 .map(flightMapper::toFlightDto)
                 .collect(Collectors.toList());
-        
         return ResponseEntity.ok(flightDtos);
     }
 }

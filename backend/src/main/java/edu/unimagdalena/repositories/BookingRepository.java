@@ -8,22 +8,26 @@ import org.springframework.data.repository.query.Param;
 import edu.unimagdalena.entities.Booking;
 import edu.unimagdalena.entities.BookingStatus;
 
-
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-   
-    //@Query("SELECT b FROM Booking b JOIN b.customerName u WHERE u.username = :customerName AND b.status = :status")
-    //List<Booking> findByStatusAndCustomerNameWithQuery(@Param("status") BookingStatus status, @Param("customerName") String customerName);
-    List<Booking> findByStatus(BookingStatus status); 
-    @Query("SELECT b FROM Booking b JOIN b.customerName u WHERE u.username = :customerName")
-    List<Booking> findByCustomerName(@Param("customerName") String customerName);
     
-    @Query("SELECT c FROM Booking c JOIN c.customerName u WHERE u.username = :customerName AND c.status = :status")
-    List<Booking> findByStatusAndCustomerName(@Param("status") BookingStatus status,@Param("customerName") String customerName);
+    // Consulta por estado
+    List<Booking> findByStatus(BookingStatus status);
+    
+    // Consulta por username del usuario (usando relación)
+    @Query("SELECT b FROM Booking b JOIN b.user u WHERE u.username = :username")
+    List<Booking> findByUserUsername(@Param("username") String username);
+    
+    // Consulta por estado y username
+    @Query("SELECT b FROM Booking b JOIN b.user u WHERE u.username = :username AND b.status = :status")
+    List<Booking> findByStatusAndUserUsername(@Param("status") BookingStatus status, 
+                                           @Param("username") String username);
   
-    @Query("SELECT t FROM Booking t JOIN t.outboundFlight f WHERE f.id = :flightId")
-    List<Booking> findBookingByOutboundFlight(@Param("flightId") Integer flightId);
-
-    //@Query("SELECT b FROM Booking b WHERE b.outboundFlight.id = :flightId")
-    //List<Booking> findByOutboundFlightId(@Param("flightId") int flightId);    
+    // Consulta por vuelo de salida
+    @Query("SELECT b FROM Booking b WHERE b.outboundFlight.id = :flightId")
+    List<Booking> findByOutboundFlightId(@Param("flightId") Integer flightId);
+    
+    // Consultas derivadas alternativas
+    List<Booking> findByUser_Username(String username);
+    List<Booking> findByStatusAndUser_Username(BookingStatus status, String username);
 }
 
