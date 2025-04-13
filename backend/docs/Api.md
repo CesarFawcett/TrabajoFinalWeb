@@ -10,6 +10,7 @@
 | GET    | `/?status={status}`               | Filtra por estado               |
 | DELETE | `/{id}`                           | Elimina reserva                 |
 | GET    | `/flight/{flightId}`              | Reservas por vuelo              |
+|--------|-----------------------------------|---------------------------------|
 
 
 

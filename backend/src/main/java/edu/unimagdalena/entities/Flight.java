@@ -56,7 +56,7 @@ public class Flight {
 
     @Schema(description = "Nombre del aeropuerto de llegad", example = "Airport 2")
     private String arrivalAirportName;
-// por aqui
+
     @Schema(description = "Ciudad de llegada", example = "City 2")
     private String arrivalCity;
 
