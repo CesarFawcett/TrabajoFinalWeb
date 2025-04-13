@@ -11,6 +11,7 @@ Un sistema backend desarrollado con Spring Boot para gestionar reservas de vuelo
 - H2 Database - Base de datos en memoria (desarrollo)
 - SQL Server - Base de datos de producción
 - Maven - Gestión de dependencias
+- Swagger (OpenAPI 3.0)
 
 # 🚀 Configuración del Proyecto
 Requisitos Previos
@@ -21,6 +22,11 @@ Requisitos Previos
 # 📂 Estructura del Proyecto 
 TrabajoFinalWeb (Multi-Módulo Maven)
 ├── backend (Módulo principal)
+│   ├───docs
+│   │   ├── API.md                 # Detalle técnico de endpoints
+│   │   └── ENTITIES.md            # Descripción profunda de entidades
+│   │   
+│   │ 
 │   ├── src/main/java/edu/unimagdalena
 │   │   ├── controllers      # Controladores REST
 │   │   ├── Dto              # Objetos de Transferencia de Datos
@@ -29,4 +35,15 @@ TrabajoFinalWeb (Multi-Módulo Maven)
 │   │   ├── repositories     # Repositorios Spring Data JPA
 │   │   └── services         # Lógica de negocio
 │   └── BackendWebApplication.java # Punto de entrada
+├── README.md
+│
 └── frontend (Módulo principal) # proximo
+
+## 📊 Swagger UI
+Accede a la documentación interactiva:  
+🔗 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+## 🚀 Cómo Ejecutar
+```bash
+mvn spring-boot:run
+```

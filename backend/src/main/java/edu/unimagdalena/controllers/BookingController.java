@@ -20,8 +20,14 @@ import edu.unimagdalena.exceptions.FlightNotFoundException;
 import edu.unimagdalena.services.BookingService;
 import edu.unimagdalena.services.UserService;
 
+import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/bookings")
+@Tag(name = "Bookings", description = "API para gestión de reservas de vuelos")
 public class BookingController {
 
     @Autowired
@@ -30,8 +36,12 @@ public class BookingController {
     private  BookingMapper bookingMapper;
     @Autowired
     private UserService userService;
-
-    //Crear 
+    
+    @Operation(summary = "Crear reserva", description = "Crea una nueva reserva")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente"),
+        @ApiResponse(responseCode = "409", description = "Código de reserva duplicado")
+    })
     @PostMapping("")
     public ResponseEntity<BookingCreateDto>create(@RequestBody BookingCreateDto booking){ 
         Booking newBooking = bookingMapper.toEntity(booking);
@@ -49,7 +59,8 @@ public class BookingController {
          return ResponseEntity.created(location).body(bookingCreateDto);
     }
 
-    //1 Obtiene una reserva por el id
+    @Operation(summary = "Obtener reserva por ID")
+    @ApiResponse(responseCode = "302", description = "Reserva encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<BookingDto>findById(@PathVariable("id") Integer id){
         BookingDto booking= bookingService.findById(id)
@@ -58,8 +69,7 @@ public class BookingController {
      return ResponseEntity.status(HttpStatus.FOUND).body(booking);
     }
 
-    //2 Obtiene un listado de reserva según el parámetro de búsqueda indicado, puede ser sin parámetro, un
-    // sólo parámetro o los dos parámetros a la vez por status y customerName
+    @Operation(summary = "Buscar reservas", description = "Filtra reservas por estado y/o nombre de cliente")
     @GetMapping("/")
     public ResponseEntity<List<BookingDto>> findBookingsByStatusAndCustomerName(
                                             @RequestParam(name = "status", required = false) BookingStatus status,
@@ -80,7 +90,13 @@ public class BookingController {
       return new ResponseEntity<>(bookingDtos, HttpStatus.OK);
     }
 
-    //3 Permite crear una reserva de un vuelo y un usuario dado en el path parámetro
+    @Operation(summary = "Crear reserva para usuario y vuelo", 
+           description = "Crea una reserva confirmada con check-in automático")
+    @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente"),
+    @ApiResponse(responseCode = "404", description = "Usuario o vuelo no encontrado"),
+    @ApiResponse(responseCode = "409", description = "Código de reserva duplicado")
+    })
     @PostMapping("/flight/{flighId}/user/{userId}")
     public ResponseEntity<BookingCreateDto> createBooking(@RequestParam int userId, @RequestParam int flightId) {
     User user = userService.getUserById(userId);
@@ -102,14 +118,21 @@ public class BookingController {
     return ResponseEntity.created(location).body(bookingCreateDto);
     }
 
-    //4 Elimina una reserva por el id
+    @Operation(summary = "Eliminar reserva", 
+           description = "Elimina una reserva por su ID")
+    @ApiResponses({
+    @ApiResponse(responseCode = "204", description = "Reserva eliminada exitosamente"),
+    @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         bookingService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    //5 Obtiene todas las reservas para un vuelo especificado
+    @Operation(summary = "Obtener reservas por vuelo", 
+           description = "Lista todas las reservas asociadas a un vuelo específico")
+    @ApiResponse(responseCode = "200", description = "Lista de reservas encontradas")
     @GetMapping("/flight/{flight_Id}")
     public ResponseEntity<List<BookingDto>> findBookingsByFlightId(@PathVariable(name = "flight_Id") Integer flight_Id) {
     List<Booking> bookings;
