@@ -16,6 +16,9 @@ import edu.unimagdalena.entities.Flight;
 import edu.unimagdalena.exceptions.DuplicateCodigoException;
 import edu.unimagdalena.exceptions.FlightNotFoundException;
 import edu.unimagdalena.services.FlightService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.annotation.PostConstruct;
 
 @RestController
@@ -51,26 +54,11 @@ public class FlightController {
         flight1.setFlightNumber(123);
         flight1.setSeatCapacity(200);
         flightService.createFlight(flight1);
-
-        // Vuelo 2
-        Flight flight2 = new Flight();
-        flight2.setDepartureDate("2022-04-20");
-        flight2.setDepartureAirportCode("MAD");
-        flight2.setDepartureAirportName("Airport 3");
-        flight2.setDepartureCity("City 2");
-        flight2.setDepartureLocale("Locale 1");
-        flight2.setArrivalDate(LocalDateTime.parse("2022-04-29 11:30", dateFormatter));
-        flight2.setArrivalAirportCode("SIR");
-        flight2.setArrivalAirportName("Airport 4");
-        flight2.setArrivalCity("City 2");
-        flight2.setArrivalLocale("Locale 2");
-        flight2.setTicketPrice(150);
-        flight2.setTicketCurrency("USD");
-        flight2.setFlightNumber(123);
-        flight2.setSeatCapacity(200);
-        flightService.createFlight(flight2);
     }
 
+    @Operation(summary = "Obtener todos los vuelos", 
+               description = "Retorna una lista completa de vuelos disponibles")
+    @ApiResponse(responseCode = "200", description = "Lista de vuelos encontrados")
     @GetMapping("/")
     public ResponseEntity<List<FlightDto>> findAll() {
         List<Flight> flights = flightService.findAll();
@@ -80,6 +68,12 @@ public class FlightController {
         return ResponseEntity.ok(flightDtos);
     }
 
+    @Operation(summary = "Buscar vuelos con filtros", 
+               description = "Permite filtrar vuelos por múltiples parámetros")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Vuelos encontrados"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron vuelos")
+    })
     @GetMapping("")
     public ResponseEntity<List<FlightDto>> findFlights(
             @RequestParam(required = false) String departureDate,
@@ -106,8 +100,31 @@ public class FlightController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(flightDtos);
     }
+
+    @Operation(summary = "Buscar vuelos por aeropuerto y fecha")
+    @GetMapping("/{departureAirportCode}/")
+    public ResponseEntity<List<FlightDto>> findFlightsByAirportAndDate(
+            @PathVariable String departureAirportCode,
+            @RequestParam String departureDate) {
+        List<Flight> flights = flightService.findByDepartureAirportCodeAndDepartureDate(
+                departureAirportCode, departureDate);
+        if (flights.isEmpty()) {
+            throw new FlightNotFoundException();
+        }
+        
+        List<FlightDto> flightDtos = flights.stream()
+                .map(flightMapper::toFlightDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(flightDtos);
+    }
     
-    @PostMapping
+    @Operation(summary = "Crear nuevo vuelo")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Vuelo creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos"),
+        @ApiResponse(responseCode = "409", description = "Conflicto (ej: número de vuelo duplicado)")
+    })
+    @PostMapping("/")
     public ResponseEntity<FlightCreateDto>create(@RequestBody FlightCreateDto Flight){
         Flight newFlight = flightMapper.toEntity(Flight);
         Flight flightCreate = null;
@@ -124,22 +141,7 @@ public class FlightController {
             return ResponseEntity.created(location).body(flightCreateDto);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<FlightCreateDto> createFlight(@RequestBody FlightCreateDto flightDto) {
-        Flight newFlight = flightMapper.toEntity(flightDto);
-        try {
-            Flight flightCreated = flightService.createFlight(newFlight);
-            FlightCreateDto responseDto = flightMapper.toFlightCreateDto(flightCreated);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(responseDto.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(responseDto);
-        } catch (Exception e) {
-            throw new DuplicateCodigoException();
-        }
-    }
-
+    @Operation(summary = "Actualizar vuelo existente")
     @PutMapping("/{id}")
     public ResponseEntity<FlightCreateDto> updateFlight(
             @PathVariable Integer id,
@@ -156,25 +158,13 @@ public class FlightController {
         }
     }
 
+    @Operation(summary = "Eliminar vuelo")
+    @ApiResponse(responseCode = "204", description = "Vuelo eliminado exitosamente")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFlight(@PathVariable Integer id) {
         flightService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{departureAirportCode}/")
-    public ResponseEntity<List<FlightDto>> findFlightsByAirportAndDate(
-            @PathVariable String departureAirportCode,
-            @RequestParam String departureDate) {
-        List<Flight> flights = flightService.findByDepartureAirportCodeAndDepartureDate(
-                departureAirportCode, departureDate);
-        if (flights.isEmpty()) {
-            throw new FlightNotFoundException();
-        }
-        
-        List<FlightDto> flightDtos = flights.stream()
-                .map(flightMapper::toFlightDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(flightDtos);
-    }
 }

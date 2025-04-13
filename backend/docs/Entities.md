@@ -9,7 +9,7 @@
 | `checkedIn`       | `Boolean`     | Check-in realizado                  |
 | `user`            | `User`        | Usuario que hizo la reserva         |
 | `bookingReference`| `String`      | Código de referencia                |
-|-------------------|---------------|-------------------------------------|
+
 
 ## 🔍 Entidad User
 | Campo            | Tipo          | Descripción                          |
@@ -18,7 +18,6 @@
 | `fullname`       | `String`      | Nombre completo                      |
 | `username`       | `String`      | Nombre de usuario para login         |
 | `password`       | `String`      | Contraseña                           |
-|------------------|---------------|--------------------------------------|
 
 ## 🔍 Entidad Flight
 | Campo                 | Tipo           | Descripción                     |
@@ -39,4 +38,3 @@
 | `flightNumber`        | `int`          | Número de vuelo                 |
 | `seatCapacity`        | `int`          | Capacidad de asientos           |
 | `outboundFlight`      | `List<Booking>`| ID Lista de reservas            |
-|-----------------------|----------------|---------------------------------|

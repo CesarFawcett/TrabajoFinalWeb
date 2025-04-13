@@ -77,7 +77,7 @@ public class UserController {
         @ApiResponse(responseCode = "302", description = "Usuarios encontrados"),
         @ApiResponse(responseCode = "404", description = "Usuarios no encontrado")
     })
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<UserDto>> findAll(){
         List<User> users =userService.findAll();
         List<UserDto> userDto = users.stream()
@@ -91,7 +91,7 @@ public class UserController {
         @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente"),
         @ApiResponse(responseCode = "409", description = "Nombre de usuario ya existe")
     })
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<UserCreateDto>create(@RequestBody UserCreateDto User){
         User newUser = userMapper.toUserEntity(User);
         User userCreate = null;

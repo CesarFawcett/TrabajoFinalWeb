@@ -35,28 +35,6 @@ public class BookingController {
     @Autowired
     private UserService userService;
     
-    @Operation(summary = "Crear reserva", description = "Crea una nueva reserva")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente"),
-        @ApiResponse(responseCode = "409", description = "Código de reserva duplicado")
-    })
-    @PostMapping("")
-    public ResponseEntity<BookingCreateDto>create(@RequestBody BookingCreateDto booking){ 
-        Booking newBooking = bookingMapper.toEntity(booking);
-        Booking bookingCreate = null;
-         try {
-            bookingCreate = bookingService.createBooking(newBooking);
-         } catch (Exception e) {
-             throw new DuplicateCodigoException();
-         }
-         BookingCreateDto bookingCreateDto = bookingMapper.toBookingCreateDto(bookingCreate);
-         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                         .path("/{id}")
-                         .buildAndExpand(bookingCreateDto.getId())
-                         .toUri();
-         return ResponseEntity.created(location).body(bookingCreateDto);
-    }
-
     @Operation(summary = "Obtener reserva por ID")
     @ApiResponse(responseCode = "302", description = "Reserva encontrada")
     @GetMapping("/{id}")
@@ -87,6 +65,47 @@ public class BookingController {
         .collect(Collectors.toList());
       return new ResponseEntity<>(bookingDtos, HttpStatus.OK);
     }
+
+    @Operation(summary = "Obtener reservas por vuelo", 
+           description = "Lista todas las reservas asociadas a un vuelo específico")
+    @ApiResponse(responseCode = "200", description = "Lista de reservas encontradas")
+    @GetMapping("/flight/{flight_Id}")
+    public ResponseEntity<List<BookingDto>> findBookingsByFlightId(@PathVariable(name = "flight_Id") Integer flight_Id) {
+    List<Booking> bookings;
+    if (flight_Id != null) {
+        bookings = bookingService.findBookingByOutboundFlight(flight_Id);
+    } else {
+        throw new FlightNotFoundException();
+    }
+    List<BookingDto> bookingDtos = bookings.stream()
+        .map(BookingMapper::fromBooking)
+        .collect(Collectors.toList());
+    return new ResponseEntity<>(bookingDtos, HttpStatus.OK);
+   }
+
+    @Operation(summary = "Crear reserva", description = "Crea una nueva reserva")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente"),
+        @ApiResponse(responseCode = "409", description = "Código de reserva duplicado")
+    })
+    @PostMapping("/")
+    public ResponseEntity<BookingCreateDto>create(@RequestBody BookingCreateDto booking){ 
+        Booking newBooking = bookingMapper.toEntity(booking);
+        Booking bookingCreate = null;
+         try {
+            bookingCreate = bookingService.createBooking(newBooking);
+         } catch (Exception e) {
+             throw new DuplicateCodigoException();
+         }
+         BookingCreateDto bookingCreateDto = bookingMapper.toBookingCreateDto(bookingCreate);
+         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                         .path("/{id}")
+                         .buildAndExpand(bookingCreateDto.getId())
+                         .toUri();
+         return ResponseEntity.created(location).body(bookingCreateDto);
+    }
+
+    
 
     @Operation(summary = "Crear reserva para usuario y vuelo", 
            description = "Crea una reserva confirmada con check-in automático")
@@ -128,21 +147,6 @@ public class BookingController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Obtener reservas por vuelo", 
-           description = "Lista todas las reservas asociadas a un vuelo específico")
-    @ApiResponse(responseCode = "200", description = "Lista de reservas encontradas")
-    @GetMapping("/flight/{flight_Id}")
-    public ResponseEntity<List<BookingDto>> findBookingsByFlightId(@PathVariable(name = "flight_Id") Integer flight_Id) {
-    List<Booking> bookings;
-    if (flight_Id != null) {
-        bookings = bookingService.findBookingByOutboundFlight(flight_Id);
-    } else {
-        throw new FlightNotFoundException();
-    }
-    List<BookingDto> bookingDtos = bookings.stream()
-        .map(BookingMapper::fromBooking)
-        .collect(Collectors.toList());
-    return new ResponseEntity<>(bookingDtos, HttpStatus.OK);
-   }   
+       
 }
 
