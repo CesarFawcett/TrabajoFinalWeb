@@ -19,9 +19,7 @@ import edu.unimagdalena.exceptions.DuplicateCodigoException;
 import edu.unimagdalena.exceptions.FlightNotFoundException;
 import edu.unimagdalena.services.BookingService;
 import edu.unimagdalena.services.UserService;
-
-import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

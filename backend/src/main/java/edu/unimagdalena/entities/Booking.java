@@ -8,9 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Representa una reserva de vuelo en el sistema.
  * <p>
  * Mapeada a la tabla "bookings" en la base de datos.
- * 
- * @since 1.0
- * @version 1.1
  */
 
 @Entity
@@ -21,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @AllArgsConstructor
 @Schema(name = "Booking", description = "Entidad que representa una reserva de vuelo")
 public class Booking {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "ID único de la reserva", example = "1")
