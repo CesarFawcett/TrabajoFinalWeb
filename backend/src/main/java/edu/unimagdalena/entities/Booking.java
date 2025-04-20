@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class Booking {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(description = "ID único de la reserva", example = "1")
     private int id;
     

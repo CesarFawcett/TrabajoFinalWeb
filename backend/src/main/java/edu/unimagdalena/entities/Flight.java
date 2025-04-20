@@ -23,7 +23,7 @@ import lombok.*;
 public class Flight {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(description = "ID único del vuelo", example = "101")
     private int id;
 

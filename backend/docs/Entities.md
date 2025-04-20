@@ -1,23 +1,23 @@
 # entities
 
 ## 🔍 Entidad Booking
-| Campo             | Tipo          | Descripción                         |
-|-------------------|---------------|-------------------------------------|
-| `id`              | `Int`         | ID autogenerado                     |
-| `status`          | `Enum`        | `CONFIRMED`/`CANCELLED`/`PENDING`   |
-| `outboundFlight`  | `Flight`      | Vuelo asociado                      |
-| `checkedIn`       | `Boolean`     | Check-in realizado                  |
-| `user`            | `User`        | Usuario que hizo la reserva         |
-| `bookingReference`| `String`      | Código de referencia                |
 
+|   Campo            |	  Tipo         |	Descripción                            |	 Restricciones      |
+|--------------------|-----------------|-------------------------------------------|------------------------|
+| `id`	             | `Int`           | Identificador único autogenerado.         | Primary Key.           |
+| `status`	         | `BookingStatus` | Estado de la reserva.                     | No nulo.               |
+| `outboundFlight`   | `Flight`        | Vuelo de ida asociado.                    | Relación muchos a uno. |
+| `checkedIn`	     | `boolean`       | Indica si el pasajero hizo check-in.      | No nulo.               |
+| `user`	         | `User`          | Usuario que realizó la reserva.           | Relación muchos a uno. |
+| `bookingReference` | `String`        | Código de referencia único de la reserva. | No nulo.               |
 
 ## 🔍 Entidad User
-| Campo            | Tipo          | Descripción                          |
-|------------------|---------------|--------------------------------------|
-| `id`             | `Long`        | ID autogenerado                      |
-| `fullname`       | `String`      | Nombre completo                      |
-| `username`       | `String`      | Nombre de usuario para login         |
-| `password`       | `String`      | Contraseña                           |
+|   Campo        |	  Tipo       |	Descripción                      | Restricciones  |
+|----------------|---------------|-----------------------------------|----------------|
+| `id`	         | `Int`         | Identificador único autogenerado. | Primary Key.   |
+| `fullname`	 | `String`      | Nombre completo del usuario.      | No nulo.       |
+| `username`	 | `String`      | Nombre de usuario para login.     | No nulo.       |
+| `password`	 | `String`      | Contraseña encriptada.            | No nulo.       |
 
 ## 🔍 Entidad Flight
 | Campo                 | Tipo           | Descripción                     |
