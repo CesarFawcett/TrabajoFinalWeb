@@ -8,7 +8,6 @@ Un sistema backend desarrollado con Spring Boot para gestionar reservas de vuelo
 - Spring Boot 3.3.10 - Framework backend
 - Spring Data JPA - Acceso a datos
 - Lombok - Reducción de código boilerplate
-- H2 Database - Base de datos en memoria (desarrollo)
 - SQL Server - Base de datos de producción
 - Maven - Gestión de dependencias
 - Swagger (OpenAPI 3.0)
