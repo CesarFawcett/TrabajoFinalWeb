@@ -46,3 +46,4 @@ Accede a la documentación interactiva:
 ```bash
 mvn spring-boot:run
 ```
+![alt text](<Nuevo Modelo.png>)
